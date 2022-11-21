@@ -1,0 +1,7 @@
+{% extends 'product/base.html' %}
+
+{% block body_block %}
+    {% if cat_list %}
+        {% include 'product/index0.html' with cat_list=cat_list %}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,26 @@
+ {% if cat_list %}
+ <h2>List of Categories</h2>
+ <ol>
+ <li> {{ cat.name}} </li>
+ <li> {{ cat.warehouse}} </li>
+ </ol>
+ {% else %}
+ <strong>There are no available categories!</strong>
+ {% endif %}
+
+ <br/>
+ {% if prod_list %}
+ <h2>List of Products</h2>
+ <ol>
+ {% for prod in prod_list %}
+ <li> {{ prod.name}} : {{ prod.price}} </li>
+ {% endfor %}
+ </ol>
+ {% else %}
+ <strong>There are no available products!</strong>
+ {% endif %}
+
+ <p><a href="/myapp/about">About page</a></p>
+ <p><a href="{% url 'myapp:about' %}">About page(namespace)</a></p>
+ <p><a href="/myapp/">Home page</a></p>
+ <p><a href="{% url 'myapp:products_view' %}">Products</a></p>

@@ -1,0 +1,13 @@
+ {% if cat_list %}
+ <h2>List of Categories</h2>
+ <ol>
+ {% for cat in cat_list %}
+ <li> 
+    <a href="{% url 'myapp:details' cat.name %}">(Namespace) {{ cat.name }} </a> 
+    <a href="/myapp/{{cat.name}}">(Hard Coded) {{ cat.name }} </a> 
+</li>
+ {% endfor %}
+ </ol>
+ {% else %}
+ <strong>There are no available categories!</strong>
+ {% endif %}

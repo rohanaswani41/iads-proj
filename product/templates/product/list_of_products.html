@@ -1,0 +1,10 @@
+{% if prodlist %}
+<h2>List of Products</h2>
+<ol>
+    {% for prod in prodlist %}
+    <li> <a href="/myapp/products/{{prod.name}}">{{ prod.name}}, {{ prod.price}}, Interested {{prod.interested}} </a></li>
+    {% endfor %}
+</ol>
+{% else %}
+<strong>There are no available products!</strong>
+{% endif %}

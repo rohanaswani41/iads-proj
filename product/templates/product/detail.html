@@ -1,0 +1,4 @@
+{% extends 'product/base.html' %}
+{% if cat_list %}
+    {% include 'product/detail0.html' with cat_list=cat_list prod_list=prod_list %}
+{% endif %}
