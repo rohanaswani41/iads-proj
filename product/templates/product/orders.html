@@ -1,0 +1,19 @@
+{% extends 'product/base.html' %}
+{% block body_block %}
+    <table border="2">
+        <tr>
+            <th>Order Id</th>
+            <th>Product Name</th>
+            <th>Number of Units</th>
+            <th>Order Status</th>
+        </tr>
+    {% for ord in orders %}
+        <tr>
+            <td>{{ ord.id }}</td>
+            <td>{{ ord.product.name }}</td>
+            <td>{{ ord.num_units }}</td>
+            <td>{{ ord.order_status }}</td>
+        </tr>
+    {% endfor%}
+    </table>
+{% endblock %}

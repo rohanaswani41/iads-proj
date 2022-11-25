@@ -6,17 +6,21 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 
 # Import necessary classes
-from .models import Category, Product
+from .models import Category, Product, Order
 from .forms import OrderForm, InterestForm
 
 # Import necessary classes and models
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 
+from datetime import datetime
 # Create your views here.
 def index(request):
     cat_list = Category.objects.all().order_by('id')[:10]
-    return render(request, 'index.html', {'cat_list': cat_list, 'user_name':"batman"})
+    sess_time = None
+    if "last_login_time" in request.session.keys():
+        sess_time = request.session["last_login_time"]
+    return render(request, 'index.html', {'cat_list': cat_list, 'user_name':"batman", "last_login_time": sess_time })
 
 # Create your views here.
 def user_login(request):
@@ -24,6 +28,9 @@ def user_login(request):
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
+        now = datetime.now()
+        request.session["last_login_time"] = now.strftime("%d/%m/%Y %H:%M:%S")
+        request.session.set_expiry(3600)
         if user:
             if user.is_active:
                 login(request, user)
@@ -41,8 +48,23 @@ def user_logout(request):
     logout(request)
     return HttpResponseRedirect(reverse(('myapp:index')))
 
+
+def myorders(request):
+    if request.user.is_authenticated:
+        list_of_orders = Order.objects.filter(client_id=request.user.id).all()
+        return render(request, 'product/orders.html',{"orders":list_of_orders})
+    else:    
+        return render(request, 'product/not_registered.html' )
+
 def about(request):
-    return render(request, 'about.html', {'user_name':"batman"})
+    value = 0
+    if "about_visits" not in request.COOKIES.keys():
+        value = 1
+    else:
+        value = int(request.COOKIES["about_visits"])+1
+    response = render(request, 'about.html', {'user_name':"batman", "number_of_visits": value })
+    response.set_cookie('about_visits', value, max_age=300)
+    return response
 
 def detail_view(request, cat_no):
     category = Category.objects.filter(name=cat_no).first()
