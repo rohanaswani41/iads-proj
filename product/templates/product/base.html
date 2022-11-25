@@ -18,13 +18,16 @@
  <p><a href="{% url 'myapp:index' %}">Home page</a></p>
  <p><a href="{% url 'myapp:about' %}">About page</a></p>
  <p><a href="{% url 'myapp:products_view' %}">Products</a></p>
- <p><a href="{% url 'myapp:place_order' %}">Place Order</a></p>
+ 
 
- <p><a href="{% url 'myapp:myorders' %}">My Orders</a></p>
+
  {% if request.user.is_authenticated %}
     <p><a href="{% url 'myapp:logout' %}">Logout</a></p>
+    <p><a href="{% url 'myapp:myorders' %}">My Orders</a></p>
+    <p><a href="{% url 'myapp:place_order' %}">Place Order</a></p>
 {% else %}
     <p><a href="{% url 'myapp:login' %}">Login</a></p>
+    <p><a href="{% url 'myapp:register' %}">My Orders</a></p>
 {% endif %}
  {% block body_block %}*** {% endblock %}
  </div>
