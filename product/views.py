@@ -28,12 +28,13 @@ def user_login(request):
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
-        now = datetime.now()
-        request.session["last_login_time"] = now.strftime("%d/%m/%Y %H:%M:%S")
-        request.session.set_expiry(3600)
         if user:
             if user.is_active:
                 login(request, user)
+                now = datetime.now()
+                request.session["last_login_time"] = now.strftime("%d/%m/%Y %H:%M:%S")
+                request.session["name"] = str(user)
+                request.session.set_expiry(3600)
                 return HttpResponseRedirect(reverse('myapp:index'))
             else:
                 return HttpResponse('Your account is disabled.')
@@ -115,3 +116,7 @@ def productdetail(request, prod_id):
         prodlist = Product.objects.filter(name=prod_id).all()
         form = InterestForm()
         return render(request, 'products.html', {'form':form, 'prodlist': prodlist, 'user_name':"batman", "stock": prodlist[0].stock})
+
+
+def register(request):
+    return
