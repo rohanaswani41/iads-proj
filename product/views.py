@@ -98,8 +98,6 @@ def place_order(request):
         return render(request, 'placeorder.html', {'form':form, 'msg':msg,'prodlist':prodlist, 'user_name':"batman"})
 
 def productdetail(request, prod_id):
-    
-
     if request.method == 'POST':
         form = InterestForm(request.POST)
         if form.is_valid():
