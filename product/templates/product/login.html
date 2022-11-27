@@ -1,11 +1,9 @@
-<html>
-    <body>
+{% extends 'product/base.html' %}
+{% load crispy_forms_tags %}
+{% block body_block %}
         <form action="{% url 'myapp:login' %}" method="POST">
             {% csrf_token %}
-            Username:<input name="username" /> <br/>
-            Password:<input name="password" /> <br/>
+            {{ form|crispy }}
             <button type="submit">Submit</button>
         </form>
-    </body>
-
-</html>
+{% endblock %}

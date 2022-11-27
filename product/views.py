@@ -3,16 +3,15 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect, HttpResponse
 
 # Create your views here.
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Import necessary classes
 from .models import Category, Product, Order
-from .forms import OrderForm, InterestForm
+from .forms import OrderForm, InterestForm, CustomUserCreationForm, LoginForm
 
 # Import necessary classes and models
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
-
 from datetime import datetime
 # Create your views here.
 def index(request):
@@ -25,6 +24,7 @@ def index(request):
 # Create your views here.
 def user_login(request):
     if request.method == 'POST':
+        form = LoginForm(request.POST)
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
@@ -41,7 +41,8 @@ def user_login(request):
         else:
             return HttpResponse('Invalid login details.')
     else:
-        return render(request, 'product/login.html')
+        form = LoginForm()
+        return render(request, 'product/login.html', { 'form': form})
 
     
 @login_required
@@ -55,7 +56,7 @@ def myorders(request):
         list_of_orders = Order.objects.filter(client_id=request.user.id).all()
         return render(request, 'product/orders.html',{"orders":list_of_orders})
     else:    
-        return render(request, 'product/not_registered.html' )
+        return HttpResponseRedirect(reverse(('myapp:register')))
 
 def about(request):
     value = 0
@@ -117,4 +118,11 @@ def productdetail(request, prod_id):
 
 
 def register(request):
-    return
+    if  request.method == "POST":
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+	        form.save()
+        return HttpResponseRedirect(reverse(('myapp:index')))
+    else:
+        form = CustomUserCreationForm()
+        return render(request, 'register.html', {'form':form })

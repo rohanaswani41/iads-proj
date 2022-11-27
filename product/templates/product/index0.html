@@ -1,13 +1,13 @@
  {% if cat_list %}
  <h2>List of Categories</h2>
- <ol>
+ <ul class="list-group">
  {% for cat in cat_list %}
- <li> 
+ <li class="list-group-item"> 
     <a href="{% url 'myapp:details' cat.name %}">(Namespace) {{ cat.name }} </a> 
     <a href="/myapp/{{cat.name}}">(Hard Coded) {{ cat.name }} </a> 
 </li>
  {% endfor %}
- </ol>
+ </ul>
  {% else %}
  <strong>There are no available categories!</strong>
  {% endif %}

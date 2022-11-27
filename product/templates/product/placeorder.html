@@ -1,11 +1,11 @@
 {% extends 'product/base.html' %}
-
+{% load crispy_forms_tags %}
 {% block body_block %}
     {% include 'product/list_of_products.html' with prodlist=prodlist %}
     {% if form %}
         <form action="{% url 'myapp:place_order' %}" method="post">
              {% csrf_token %}
-            {{ form }}
+            {{ form|crispy }}
             <input type="submit" value="Submit">
         </form>
     {% endif%}

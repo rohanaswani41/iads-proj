@@ -1,6 +1,7 @@
 from django import forms
-from product.models import Order, Product
+from product.models import Order, User
 from django.utils.safestring import mark_safe
+from django.contrib.auth.forms import UserCreationForm
 
 class OrderForm(forms.ModelForm):
     class Meta:
@@ -13,6 +14,10 @@ class OrderForm(forms.ModelForm):
             "num_units":"Quantity"
         }
 
+class LoginForm(forms.Form):
+    username = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput)
+
 class InterestForm(forms.Form):
     
     CHOICES = (('1', 'Yes'), ('0', 'No'))   
@@ -23,3 +28,12 @@ class InterestForm(forms.Form):
     quantity = forms.IntegerField(initial=1, label="quantity")
     comments = forms.CharField(widget=forms.Textarea,label=mark_safe("<br/>Additional Comments"))
     
+class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(label = "Email")
+    class Meta:
+        model = User
+        fields = ("email","username","password1","password2")
+
+class LoginForm(forms.Form):
+    username = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput())
