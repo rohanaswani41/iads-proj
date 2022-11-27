@@ -118,7 +118,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = os.path.join(BASE_DIR, "product/static/product/")
-
+STATIC_ROOT = os.path.join(BASE_DIR, "product")
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR,"product/static/") 
+]
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -126,7 +129,7 @@ STATIC_URL = os.path.join(BASE_DIR, "product/static/product/")
 MEDIA_URL = '/media/'
 
 # Path where media is stored
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_ROOT = os.path.join(BASE_DIR, "product/static/")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

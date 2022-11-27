@@ -1,7 +1,8 @@
 from django.db import models
 import datetime
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractBaseUser
 from django.utils import timezone
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 class Category(models.Model):
     name = models.CharField(max_length=200)
@@ -14,7 +15,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    stock = models.PositiveIntegerField(default=100)
+    stock = models.PositiveIntegerField(default=100, validators=[MaxValueValidator(1000), MinValueValidator(0)])
     available = models.BooleanField(default=True)
     description = models.TextField(blank=True, default="")
     interested = models.PositiveIntegerField(default=0)
@@ -24,6 +25,13 @@ class Product(models.Model):
     
     def refill(self):
         self.stock += 100
+
+class MyUser(AbstractBaseUser):
+    username = models.CharField(max_length=100, default=-1)
+    avatar = models.ImageField('profile picture', upload_to='static/', null=True, blank=True)
+    USERNAME_FIELD = 'username'
+    def __str__(self):
+        return self.avatar
 
 class Client(User):
     PROVINCE_CHOICES = [ ('AB', 'Alberta'), ('MB', 'Manitoba'), ('ON', 'Ontario'), ('QC', 'Quebec'),]

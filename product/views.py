@@ -6,8 +6,8 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 
 # Import necessary classes
-from .models import Category, Product, Order
-from .forms import OrderForm, InterestForm, CustomUserCreationForm, LoginForm
+from .models import Category, Product, Order, MyUser
+from .forms import OrderForm, InterestForm, CustomUserCreationForm, LoginForm, ProfilePhotoForm
 
 # Import necessary classes and models
 from django.contrib.auth import authenticate, login, logout
@@ -56,7 +56,7 @@ def myorders(request):
         list_of_orders = Order.objects.filter(client_id=request.user.id).all()
         return render(request, 'product/orders.html',{"orders":list_of_orders})
     else:    
-        return HttpResponseRedirect(reverse(('myapp:register')))
+        return HttpResponseRedirect(reverse(('myapp:login')))
 
 def about(request):
     value = 0
@@ -126,3 +126,24 @@ def register(request):
     else:
         form = CustomUserCreationForm()
         return render(request, 'register.html', {'form':form })
+
+@login_required
+def profile(request):
+    if  request.method == "POST":
+        form = ProfilePhotoForm(request.POST,request.FILES)
+        if form.is_valid():
+            myuser = MyUser.objects.filter(username=request.user).first()
+            if myuser == None:
+                p = MyUser(avatar = request.FILES['avatar'],username=request.user)
+                p.save()
+            else:
+                myuser.avatar = request.FILES['avatar']
+                myuser.save()
+        return HttpResponseRedirect(reverse(('myapp:profile')))
+    else:
+        ava = ''
+        form = ProfilePhotoForm(request.user)
+        myuser = MyUser.objects.filter(username=request.user).first()
+        if myuser!=None:
+            ava = str(myuser.avatar)
+        return render(request, 'profilephoto.html', {'form':form, "photo":ava })

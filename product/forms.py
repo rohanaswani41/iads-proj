@@ -37,3 +37,10 @@ class CustomUserCreationForm(UserCreationForm):
 class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput())
+
+class ProfilePhotoForm(forms.Form):
+
+    def __init__(self, *args, **kwargs):
+        super(ProfilePhotoForm, self).__init__(*args, **kwargs)
+        self.fields['avatar'].required = False
+    avatar = forms.ImageField(label="Upload Profile Photo")
