@@ -44,3 +44,7 @@ class ProfilePhotoForm(forms.Form):
         super(ProfilePhotoForm, self).__init__(*args, **kwargs)
         self.fields['avatar'].required = False
     avatar = forms.ImageField(label="Upload Profile Photo")
+
+class ForgotPassword(forms.Form):
+    username = forms.CharField(label="Enter Username")
+

@@ -1,13 +1,13 @@
 from django.shortcuts import render
 from django.urls import reverse
 from django.http import HttpResponseRedirect, HttpResponse
-
+from django.core.mail import send_mail
 # Create your views here.
 from django.shortcuts import render, redirect
 
 # Import necessary classes
-from .models import Category, Product, Order, MyUser
-from .forms import OrderForm, InterestForm, CustomUserCreationForm, LoginForm, ProfilePhotoForm
+from .models import Category, Product, Order, MyUser, User
+from .forms import OrderForm, InterestForm, CustomUserCreationForm, LoginForm, ProfilePhotoForm, ForgotPassword
 
 # Import necessary classes and models
 from django.contrib.auth import authenticate, login, logout
@@ -35,7 +35,10 @@ def user_login(request):
                 request.session["last_login_time"] = now.strftime("%d/%m/%Y %H:%M:%S")
                 request.session["name"] = str(user)
                 request.session.set_expiry(3600)
-                return HttpResponseRedirect(reverse('myapp:index'))
+                if 'next' not in request.POST:
+                    return HttpResponseRedirect(reverse('myapp:index'))
+                else:
+                    return HttpResponseRedirect(reverse('myapp:myorders'))
             else:
                 return HttpResponse('Your account is disabled.')
         else:
@@ -56,7 +59,7 @@ def myorders(request):
         list_of_orders = Order.objects.filter(client_id=request.user.id).all()
         return render(request, 'product/orders.html',{"orders":list_of_orders})
     else:    
-        return HttpResponseRedirect(reverse(('myapp:login')))
+        return HttpResponseRedirect('/myapp/login/?path=path')
 
 def about(request):
     value = 0
@@ -119,10 +122,16 @@ def productdetail(request, prod_id):
 
 def register(request):
     if  request.method == "POST":
+        print(request)
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-	        form.save()
+            form.save()
+        else:
+            print(form.errors.as_data())
+            return render(request, 'register.html', {'form':form, 'errors':form.errors.as_data()})
         return HttpResponseRedirect(reverse(('myapp:index')))
+        
+
     else:
         form = CustomUserCreationForm()
         return render(request, 'register.html', {'form':form })
@@ -147,3 +156,25 @@ def profile(request):
         if myuser!=None:
             ava = str(myuser.avatar)
         return render(request, 'profilephoto.html', {'form':form, "photo":ava })
+
+import random
+import string    
+def get_random_string(length):
+    letters = string.ascii_lowercase
+    result_str = ''.join(random.choice(letters) for i in range(length))
+    return result_str
+
+def forgot_password(request):
+    if  request.method == "POST":
+        form = ForgotPassword(request.POST)
+        if form.is_valid():
+            general = User.objects.filter(username = request.POST['username'])
+            otp = get_random_string(8)
+            print(otp)
+            print(general)
+            send_mail("New Password", " <h3>New Password</h3> <p> Your new password is: "+otp +"</p>","info@admin.com",[general.email])
+            return HttpResponseRedirect(reverse(('myapp:login')))
+
+    else:
+        form = ForgotPassword()
+        return render(request, 'forgot_password.html', {'form':form})

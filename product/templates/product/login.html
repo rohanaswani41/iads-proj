@@ -4,6 +4,10 @@
         <form action="{% url 'myapp:login' %}" method="POST">
             {% csrf_token %}
             {{ form|crispy }}
+            {% if request.GET.path %}
+                <input type="hidden" name="next">{{ path }}</input>
+            {% endif %}
             <button type="submit">Submit</button>
         </form>
+        <a href="{% url 'myapp:forgotpassword' %}">Forgot Password</a>
 {% endblock %}
