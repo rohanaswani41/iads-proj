@@ -1,8 +1,8 @@
  {% if cat_list %}
  <h2>List of Categories</h2>
- <ol>
- <li> {{ cat.name}} </li>
- <li> {{ cat.warehouse}} </li>
+ <ol class="list-group">
+ <li class="list-group-item"> {{ cat.name}} </li>
+ <li class="list-group-item"> {{ cat.warehouse}} </li>
  </ol>
  {% else %}
  <strong>There are no available categories!</strong>
@@ -11,9 +11,9 @@
  <br/>
  {% if prod_list %}
  <h2>List of Products</h2>
- <ol>
+ <ol class="list-group">
  {% for prod in prod_list %}
- <li> {{ prod.name}} : {{ prod.price}} </li>
+ <li class="list-group-item"> {{ prod.name}} : {{ prod.price}} </li>
  {% endfor %}
  </ol>
  {% else %}
